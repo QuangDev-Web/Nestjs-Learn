@@ -11,7 +11,7 @@ export class CatService {
     { id: 3, age: 5, name: 'Tibi', breed: 'Meal' },
   ];
   create(createCatDto: CreateCatDto) {
-    return 'This action adds a new cat';
+    return createCatDto;
   }
 
   findAll(): CatModel[] {

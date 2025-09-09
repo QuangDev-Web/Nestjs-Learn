@@ -7,6 +7,7 @@ import {
   Patch,
   Param,
   Delete,
+  ValidationPipe,
 } from '@nestjs/common';
 import { CatService } from './cat.service';
 import { CreateCatDto } from './dto/create-cat.dto';
@@ -20,9 +21,9 @@ export class CatController {
   constructor(private readonly catService: CatService) { }
 
   @Post()
-  create(@Body() createCatDto: CreateCatDto): ResponseData<string | null> {
+  create(@Body(new ValidationPipe()) createCatDto: CreateCatDto): ResponseData<CreateCatDto | null> {
     try {
-      return new ResponseData<string>(
+      return new ResponseData<CreateCatDto>(
         this.catService.create(createCatDto),
         HttpStatus.SUCCESS,
         HttpMessage.SUCCESS,
