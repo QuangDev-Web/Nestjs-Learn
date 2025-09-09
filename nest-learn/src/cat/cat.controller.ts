@@ -13,6 +13,7 @@ import { CreateCatDto } from './dto/create-cat.dto';
 import { UpdateCatDto } from './dto/update-cat.dto';
 import { ResponseData } from '../global/globalClass';
 import { HttpMessage, HttpStatus } from '../global/globalEnum';
+import { CatModel } from '../models/Cat.model';
 
 @Controller('cat')
 export class CatController {
@@ -36,9 +37,9 @@ export class CatController {
   }
 
   @Get()
-  findAll(): ResponseData<string | null> {
+  findAll(): ResponseData<CatModel[] | null> {
     try {
-      return new ResponseData<string>(
+      return new ResponseData<CatModel[]>(
         this.catService.findAll(),
         HttpStatus.SUCCESS,
         HttpMessage.SUCCESS,
