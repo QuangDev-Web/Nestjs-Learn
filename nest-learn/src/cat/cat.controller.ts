@@ -54,16 +54,16 @@ export class CatController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): ResponseData<string | null> {
+  findOne(@Param('id') id: string): ResponseData<CatModel | undefined> {
     try {
-      return new ResponseData<string>(
+      return new ResponseData<CatModel | undefined>(
         this.catService.findOne(+id),
         HttpStatus.SUCCESS,
         HttpMessage.SUCCESS,
       );
     } catch (error) {
-      return new ResponseData<null>(
-        null,
+      return new ResponseData<undefined>(
+        undefined,
         HttpStatus.ERROR,
         HttpMessage.ERROR,
       );

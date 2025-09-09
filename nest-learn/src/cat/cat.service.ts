@@ -5,7 +5,7 @@ import { CatModel } from '../models/Cat.model';
 
 @Injectable()
 export class CatService {
-  private Cats: CatModel[] = [
+  private cats: CatModel[] = [
     { id: 1, age: 3, name: 'Tabby', breed: 'Fish' },
     { id: 2, age: 4, name: 'Toby', breed: 'Meat' },
     { id: 3, age: 5, name: 'Tibi', breed: 'Meal' },
@@ -15,11 +15,11 @@ export class CatService {
   }
 
   findAll(): CatModel[] {
-    return this.Cats;
+    return this.cats;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} cat`;
+  findOne(id: number): CatModel | undefined {
+    return this.cats.find((cat) => cat.id === id) || undefined;
   }
 
   update(id: number, updateCatDto: UpdateCatDto) {
