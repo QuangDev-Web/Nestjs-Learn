@@ -37,6 +37,11 @@ export class CatService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} cat`;
+    const index = this.cats.findIndex(cat => cat.id === Number(id))
+    if(index !== -1) {
+      this.cats.splice(index,1)
+      return `This action removes a #${id} cat`;
+    } 
+    return `This action removes a #${id} cat failed`
   }
 }
