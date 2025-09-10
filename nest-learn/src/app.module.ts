@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { CatModule } from './cat/cat.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
+import { Cat } from './cat/entities/cat.entity';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { DataSource } from 'typeorm';
       username: 'root',
       password: '',
       database: 'nestjs_api_v1',
-      entities: [],
+      entities: [Cat],
       synchronize: true,
     }),
     CatModule

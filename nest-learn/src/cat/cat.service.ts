@@ -1,47 +1,53 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { UpdateCatDto } from './dto/update-cat.dto';
 import { CatModel } from '../models/cat.model';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Cat } from './entities/cat.entity';
 
 @Injectable()
 export class CatService {
-  private cats: CatModel[] = [
-    { id: 1, age: 3, name: 'Tabby', breed: 'Fish' },
-    { id: 2, age: 4, name: 'Toby', breed: 'Meat' },
-    { id: 3, age: 5, name: 'Tibi', breed: 'Meal' },
-  ];
-  create(createCatDto: CreateCatDto): CatModel {
-    const newCat = {
-      id: Math.random(),
-      ...createCatDto
+  constructor(
+    @InjectRepository(Cat)
+    private catsRepository: Repository<Cat>,
+  ) {}
+  create(createCatDto: CreateCatDto): Promise<Cat> {
+    const newCat = this.catsRepository.create(createCatDto);
+    return this.catsRepository.save(newCat);
+  }
+
+  findAll(): Promise<Cat[]> {
+    return this.catsRepository.find();
+  }
+
+  findOne(id: number): Promise<Cat | null> {
+    const cat = this.catsRepository.findOneBy({id});
+    if (!cat) {
+      throw new NotFoundException(`Cat with id ${id} not found`);
     }
-    this.cats.push(newCat)
-    return newCat;
+    return cat;
   }
 
-  findAll(): CatModel[] {
-    return this.cats;
-  }
+  async update(id: number, updateCatDto: UpdateCatDto): Promise<Cat> {
+    const cat = await this.catsRepository.findOneBy({id})
 
-  findOne(id: number): CatModel | undefined {
-    return this.cats.find((cat) => cat.id === id) || undefined;
-  }
-
-  update(id: number, updateCatDto: UpdateCatDto): CatModel {
-    const index = this.cats.findIndex(cat => cat.id === Number(id))
-    this.cats[index] = {
-      ...this.cats[index],
-      ...updateCatDto
+    if(!cat) {
+      throw new NotFoundException(`Cat with id ${id} not found`)
     }
-    return this.cats[index];
+
+    const updateCat = this.catsRepository.merge(cat,updateCatDto)
+
+    return this.catsRepository.save(updateCat)
   }
 
-  remove(id: number) {
-    const index = this.cats.findIndex(cat => cat.id === Number(id))
-    if(index !== -1) {
-      this.cats.splice(index,1)
-      return `This action removes a #${id} cat`;
-    } 
-    return `This action removes a #${id} cat failed`
+  async remove(id: number) {
+    const result = await this.catsRepository.delete(id)
+
+    if(result.affected === 0) {
+      throw new NotFoundException(`Cat with id ${id} not found`)
+    }
+
+    return `delete Cat with ${id} success`
   }
 }

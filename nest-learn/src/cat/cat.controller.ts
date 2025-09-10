@@ -21,10 +21,11 @@ export class CatController {
   constructor(private readonly catService: CatService) { }
 
   @Post()
-  create(@Body() createCatDto: CreateCatDto): ResponseData<CatModel | null> {
+  async create(@Body() createCatDto: CreateCatDto): Promise<ResponseData<CatModel | null>> {
     try {
+      const newCat = await this.catService.create(createCatDto)
       return new ResponseData<CatModel>(
-        this.catService.create(createCatDto),
+        newCat,
         HttpStatus.SUCCESS,
         HttpMessage.SUCCESS,
       );
@@ -38,10 +39,11 @@ export class CatController {
   }
 
   @Get()
-  findAll(): ResponseData<CatModel[] | null> {
+  async findAll(): Promise<ResponseData<CatModel[] | null>> {
+    const allCats = await this.catService.findAll();
     try {
       return new ResponseData<CatModel[]>(
-        this.catService.findAll(),
+        allCats,
         HttpStatus.SUCCESS,
         HttpMessage.SUCCESS,
       );
@@ -55,16 +57,17 @@ export class CatController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): ResponseData<CatModel | undefined> {
+  async findOne(@Param('id') id: string): Promise<ResponseData<CatModel | null>> {
     try {
-      return new ResponseData<CatModel | undefined>(
-        this.catService.findOne(+id),
+      const cat = await this.catService.findOne(+id)
+      return new ResponseData<CatModel | null>(
+        cat,
         HttpStatus.SUCCESS,
         HttpMessage.SUCCESS,
       );
     } catch (error) {
-      return new ResponseData<undefined>(
-        undefined,
+      return new ResponseData<null>(
+        null,
         HttpStatus.ERROR,
         HttpMessage.ERROR,
       );
@@ -72,10 +75,11 @@ export class CatController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCatDto: UpdateCatDto): ResponseData<CatModel | null> {
+  async update(@Param('id') id: string, @Body() updateCatDto: UpdateCatDto): Promise<ResponseData<CatModel | null>> {
+    const updatedCat = this.catService.update(+id, updateCatDto)
     try {
       return new ResponseData<CatModel>(
-        this.catService.update(+id, updateCatDto),
+        await updatedCat,
         HttpStatus.SUCCESS,
         HttpMessage.SUCCESS,
       );
@@ -89,10 +93,11 @@ export class CatController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): ResponseData<string | null> {
+  async remove(@Param('id') id: string): Promise<ResponseData<string | null>> {
+    const result = await this.catService.remove(+id)
     try {
       return new ResponseData<string>(
-        this.catService.remove(+id),
+        result,
         HttpStatus.SUCCESS,
         HttpMessage.SUCCESS,
       );
