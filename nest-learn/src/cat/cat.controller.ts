@@ -14,14 +14,14 @@ import { CreateCatDto } from './dto/create-cat.dto';
 import { UpdateCatDto } from './dto/update-cat.dto';
 import { ResponseData } from '../global/globalClass';
 import { HttpMessage, HttpStatus } from '../global/globalEnum';
-import { CatModel } from '../models/Cat.model';
+import { CatModel } from '../models/cat.model';
 
 @Controller('cat')
 export class CatController {
   constructor(private readonly catService: CatService) { }
 
   @Post()
-  create(@Body(new ValidationPipe()) createCatDto: CreateCatDto): ResponseData<CreateCatDto | null> {
+  create(@Body() createCatDto: CreateCatDto): ResponseData<CreateCatDto | null> {
     try {
       return new ResponseData<CreateCatDto>(
         this.catService.create(createCatDto),
