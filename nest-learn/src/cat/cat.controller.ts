@@ -21,9 +21,9 @@ export class CatController {
   constructor(private readonly catService: CatService) { }
 
   @Post()
-  create(@Body() createCatDto: CreateCatDto): ResponseData<CreateCatDto | null> {
+  create(@Body() createCatDto: CreateCatDto): ResponseData<CatModel[] | null> {
     try {
-      return new ResponseData<CreateCatDto>(
+      return new ResponseData<CatModel[]>(
         this.catService.create(createCatDto),
         HttpStatus.SUCCESS,
         HttpMessage.SUCCESS,

@@ -10,8 +10,13 @@ export class CatService {
     { id: 2, age: 4, name: 'Toby', breed: 'Meat' },
     { id: 3, age: 5, name: 'Tibi', breed: 'Meal' },
   ];
-  create(createCatDto: CreateCatDto) {
-    return createCatDto;
+  create(createCatDto: CreateCatDto): CatModel[] {
+    const newCat = {
+      id: Math.random(),
+      ...createCatDto
+    }
+    this.cats.push(newCat)
+    return this.cats;
   }
 
   findAll(): CatModel[] {
