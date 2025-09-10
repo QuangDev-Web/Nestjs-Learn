@@ -21,9 +21,9 @@ export class CatController {
   constructor(private readonly catService: CatService) { }
 
   @Post()
-  create(@Body() createCatDto: CreateCatDto): ResponseData<CatModel[] | null> {
+  create(@Body() createCatDto: CreateCatDto): ResponseData<CatModel | null> {
     try {
-      return new ResponseData<CatModel[]>(
+      return new ResponseData<CatModel>(
         this.catService.create(createCatDto),
         HttpStatus.SUCCESS,
         HttpMessage.SUCCESS,
@@ -72,9 +72,9 @@ export class CatController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCatDto: UpdateCatDto): ResponseData<string | null> {
+  update(@Param('id') id: string, @Body() updateCatDto: UpdateCatDto): ResponseData<CatModel | null> {
     try {
-      return new ResponseData<string>(
+      return new ResponseData<CatModel>(
         this.catService.update(+id, updateCatDto),
         HttpStatus.SUCCESS,
         HttpMessage.SUCCESS,

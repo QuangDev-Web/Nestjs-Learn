@@ -10,13 +10,13 @@ export class CatService {
     { id: 2, age: 4, name: 'Toby', breed: 'Meat' },
     { id: 3, age: 5, name: 'Tibi', breed: 'Meal' },
   ];
-  create(createCatDto: CreateCatDto): CatModel[] {
+  create(createCatDto: CreateCatDto): CatModel {
     const newCat = {
       id: Math.random(),
       ...createCatDto
     }
     this.cats.push(newCat)
-    return this.cats;
+    return newCat;
   }
 
   findAll(): CatModel[] {
@@ -27,8 +27,13 @@ export class CatService {
     return this.cats.find((cat) => cat.id === id) || undefined;
   }
 
-  update(id: number, updateCatDto: UpdateCatDto) {
-    return `This action updates a #${id} cat`;
+  update(id: number, updateCatDto: UpdateCatDto): CatModel {
+    const index = this.cats.findIndex(cat => cat.id === Number(id))
+    this.cats[index] = {
+      ...this.cats[index],
+      ...updateCatDto
+    }
+    return this.cats[index];
   }
 
   remove(id: number) {
